@@ -17,6 +17,11 @@ func main() {
 	// Drop its first two values.
 	s = s[2:]
 	printSlice(s)
+
+	a := []int{3, 2, 1, 0}
+	for i, v := range a {
+		fmt.Print(i, v)
+	}
 }
 
 func printSlice(s []int) {

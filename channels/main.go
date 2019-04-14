@@ -81,8 +81,62 @@ func runReadOnlyChannel() {
 	fmt.Println("Done!")
 }
 
+func sendToNilChannel() {
+	var c chan int
+	// c := make(chan int)
+	c <- 1
+}
+
+func closeClosedChannel() {
+	c := make(chan struct{})
+	close(c)
+	close(c)
+}
+
+func sendClosedChannel() {
+	c := make(chan struct{})
+	close(c)
+	c <- struct{}{}
+}
+
+func receiveFromClosedChannel() {
+	// c := make(chan struct{})
+	c := make(chan int)
+	close(c)
+	fmt.Println(<-c)
+	fmt.Println(<-c)
+	_, open := <-c
+	fmt.Println("open?:", open)
+}
+
+func selectFromClosedChannel() {
+	// c := make(chan struct{})
+	c := make(chan int)
+	close(c)
+
+	for {
+		select {
+		case val := <-c:
+			fmt.Println(val)
+		case <-time.After(10 * time.Millisecond):
+			fmt.Println("timeout")
+		default:
+			fmt.Println("default")
+		}
+	}
+}
+
 func main() {
+	// closeClosedChannel()
+	// sendToNilChannel()
+	// sendClosedChannel()
+	// receiveFromClosedChannel()
+	// selectFromClosedChannel()
+
 	// runChannelWithDone()
 	// runChannel()
-	runReadOnlyChannel()
+	// runReadOnlyChannel()
+
+	go func() { select {} }()
+	select {}
 }
